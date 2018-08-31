@@ -7,6 +7,8 @@ const http = require('http');
 const socketIO = require('socket.io');
 const express = require('express');
 
+const { generateMessage } = require('./utils/message.js');
+
 const PORT = process.env.PORT || 3000;
 const publicPath = path.join(__dirname, '/../public');
 
@@ -19,10 +21,24 @@ let io = socketIO(server);
 // set public path to serve content
 app.use(express.static(publicPath));
 
-// add socketio event listeners
+// handle socket event listeners when user is connected
 io.on('connection', (socket) => {
     console.log('[INFO] User connected');
-    // function to run when socket is disconnected
+
+    // get client ip
+    let clientIp = socket.request.connection.remoteAddress;
+
+    // greet user
+    socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
+    socket.broadcast.emit('newMessage', generateMessage('Admin', `User with IP ${clientIp} joined`));
+
+    // handle incoming messages
+    socket.on('createMessage', (msg) => {
+        console.log('Received new message from client', msg);
+        io.emit('newMessage', generateMessage(msg.from, msg.text));
+    });
+    
+    // handle disconnection
     socket.on('disconnect', () => {
         console.log('[INFO] User disconnected');
     });

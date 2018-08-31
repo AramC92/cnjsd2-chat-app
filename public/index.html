@@ -6,16 +6,6 @@
     <body>
         <h1>test</h1>
         <script src="/socket.io/socket.io.js"></script>
-        <script>
-            // open websocket and keep connection open
-            let socket = io();
-            // add socketio event listeners
-            socket.on('connect', () => {
-                console.log('[INFO] Connected to server');
-            });
-            socket.on('disconnect', () => {
-                console.log('[INFO] Disconnected from server');
-            });
-        </script>
+        <script src="/scripts/index.js"></script>
     </body>
 </html>
