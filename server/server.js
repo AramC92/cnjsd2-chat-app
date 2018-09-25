@@ -23,24 +23,24 @@ app.use(express.static(publicPath));
 
 // handle socket event listeners when user is connected
 io.on('connection', (socket) => {
-    console.log('[INFO] User connected');
+    // console.log('[INFO] User connected');
 
     // get client ip
     let clientIp = socket.request.connection.remoteAddress;
 
     // greet user
-    socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
-    socket.broadcast.emit('newMessage', generateMessage('Admin', `User with IP ${clientIp} joined`));
+    socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app!'));
+    socket.broadcast.emit('newMessage', generateMessage('Admin', `User with IP ${clientIp} joined the chat`));
 
     // handle incoming messages
     socket.on('createMessage', (msg) => {
-        console.log('Received new message from client', msg);
+        // console.log('Received new message from client', msg);
         io.emit('newMessage', generateMessage(msg.from, msg.text));
     });
     
     // handle disconnection
     socket.on('disconnect', () => {
-        console.log('[INFO] User disconnected');
+        // console.log('[INFO] User disconnected');
     });
 });
 
